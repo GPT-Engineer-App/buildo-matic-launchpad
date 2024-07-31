@@ -1,8 +1,19 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table2, CalendarDays, Paperclip, Footprints, Paperclip as AttachmentIcon, Zap } from "lucide-react";
 
 const Build = () => {
+  const [inputValue, setInputValue] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (inputValue.trim()) {
+      navigate("/chat", { state: { prompt: inputValue } });
+    }
+  };
   const projectOptions = [
     { title: "A tool to upload and edit CSV files", icon: <Table2 className="w-6 h-6 text-green-500" /> },
     { title: "A page showing top stories from Hacker News", icon: <CalendarDays className="w-6 h-6 text-orange-500" /> },
@@ -24,17 +35,21 @@ const Build = () => {
           </div>
         ))}
       </div>
-      <div className="w-full max-w-2xl relative">
+      <form onSubmit={handleSubmit} className="w-full max-w-2xl relative">
         <Input
           type="text"
           placeholder="Message GPT Engineer..."
           className="w-full bg-gray-900 text-white border-gray-700 py-3 pl-4 pr-12 rounded-lg"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
         />
         <div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex space-x-2">
           <AttachmentIcon className="w-5 h-5 text-gray-500" />
-          <Zap className="w-5 h-5 text-gray-500" />
+          <Button type="submit" variant="ghost" size="icon" className="p-0">
+            <Zap className="w-5 h-5 text-gray-500" />
+          </Button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };
